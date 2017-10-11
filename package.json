@@ -1,5 +1,6 @@
 {
   "name": "music-app",
+  "homepage" : "http://stevesaylor.io/data-music/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,6 +8,7 @@
     "leaflet": "^1.2.0",
     "material-ui": "^1.0.0-beta.16",
     "material-ui-icons": "^1.0.0-beta.15",
+    "plyr": "^2.0.16",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",

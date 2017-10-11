@@ -49,11 +49,22 @@ class TrackMenu extends Component {
         })
     };
 
+    handleSubmit= () =>{
+        let params = {
+            neighborhood: this.props.hood,
+            tracks: this.state.tracks
+        }
+
+
+
+    }
+
 
     render() {
         console.log("rendering");
         return (
             <div className="main-menu">
+                <h1>{this.props.hood}</h1>
                 {this.state.tracks.map((track, i) => {
                         return (
                             <div>

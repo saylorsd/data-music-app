@@ -45,7 +45,7 @@ class MainContent extends Component {
                               updateHood={this.updateHood}/>
 
                 <div style={{width: '480px', heigh: '100%'}}>
-                    <Menu/>
+                    <Menu hood={this.state.hood}/>
                 </div>
             </div>
         );

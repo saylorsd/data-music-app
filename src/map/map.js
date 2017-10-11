@@ -58,7 +58,7 @@ export class MapContainer extends Component {
         this.setState({selectedShape: null});   // Hacky fix that tricks react into rerendering the layer.  Aparently changing the `selectedShape` isn't enough.
         this.setState({
             selectedShape: <CartoLayer sql={sql}
-                                       css="#layer {line-color: #00F; polygon-fill: #00F; polygon-opacity: 0.4}"/>
+                                       css="#layer {line-color: #0003DD; polygon-fill: #00F; polygon-opacity: 0.2; line-width: 3; line-opacity: 1;}"/>
         });
 
         // Lift parcelId state up
