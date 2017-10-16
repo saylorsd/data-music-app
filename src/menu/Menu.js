@@ -17,6 +17,25 @@ import mapDataSource from "./utils";
 
 const INSTRUMENTS = ['piano', 'guitar', 'bass', 'trumpet'];
 
+const instrumentNumber = inst => {
+    switch (inst) {
+        case 'piano':
+            return 1;
+            break;
+        case 'guitar':
+            return 10;
+            break;
+        case 'bass':
+            return 15;
+            break;
+        case 'trumpet':
+            return 25;
+            break;
+        default:
+            return 1;
+    }
+};
+
 class TrackMenu extends Component {
     constructor(props) {
         super(props);
@@ -49,15 +68,40 @@ class TrackMenu extends Component {
         })
     };
 
-    handleSubmit= () =>{
-        let params = {
-            neighborhood: this.props.hood,
-            tracks: this.state.tracks
-        }
+    handleSubmit = event => {
+        console.log(this.state.tracks);
+        let reqTracks = JSON.stringify(this.state.tracks.map((track) => {
+            return {dataset: track.dataset.id, instrument: instrumentNumber(track.instrument)}
+        }));
+        console.log(reqTracks);
 
+        let url ='http://tools.wprdc.org/data-music/neighborhood-music/' +
+            '?neighborhood=' + this.props.hood +
+            '&tracks='+ reqTracks;
+        console.log(url);
 
-
-    }
+        fetch(url, {mode: 'no-cors'})
+            .then(
+                (response) => {
+                    response.json()
+                        .then(
+                            (data) => {
+                                let music = "data:audio/wav;base64," + data.music;
+                                let snd = new Audio(music);
+                                snd.play()
+                                    .then(() => {
+                                        },
+                                        (err) => {
+                                            console.log(err)
+                                        });
+                            },
+                            (err) => console.log(err))
+                },
+                (err) => {
+                    console.log(err)
+                }
+            )
+    };
 
 
     render() {
@@ -65,13 +109,16 @@ class TrackMenu extends Component {
         return (
             <div className="main-menu">
                 <h1>{this.props.hood}</h1>
+
+
                 {this.state.tracks.map((track, i) => {
                         return (
                             <div>
                                 <TrackMenuItem currState={this.state.tracks[i]} trackNumber={i} key={i.toString()}
+                                               numTracks={this.state.tracks.length}
                                                updateTrack={this.updateTrack} onDelete={this.handleOnDelete(i)}/>
                                 <br/>
-                                {this.state.tracks.length -1 !== i && <div><Divider/></div>}
+                                {this.state.tracks.length - 1 !== i && <div><Divider/></div>}
 
                             </div>
                         );
@@ -80,6 +127,9 @@ class TrackMenu extends Component {
                 )}
 
                 <Button raised onClick={this.handleTrackAdd}>Add Track </Button>
+                <Button raised color='primary'
+                        style={{float: 'right', 'marginLeft': 'auto', 'marginRight': 'auto'}}
+                        onClick={this.handleSubmit}>Make Some Music</Button>
             </div>
         )
     }
@@ -233,9 +283,11 @@ class TrackMenuItem extends Component {
             return (
                 <div className="track-menu-item" style={style.menuItem}>
                     <h3>Track {trackNum + 1}</h3>
+                    {this.props.numTracks > 1 &&
                     <ToolTip style={style.deleteButton} title={"Delete Track"}>
                         <IconButton onClick={this.props.onDelete}><DeleteIcon/></IconButton>
                     </ToolTip>
+                    }
                     <FormControl>
                         <InputLabel htmlFor={`dataset-${trackNum}`}>Dataset</InputLabel>
                         <Select
@@ -251,22 +303,21 @@ class TrackMenuItem extends Component {
                         </Select>
                     </FormControl>
 
-                    <FormControl>
-                        <InputLabel htmlFor={`field-${trackNum}`}>Field</InputLabel>
-                        <Select
-                            native
-                            value={this.state.field.id}
-                            onChange={this.handleChange('field')}
-                            input={<Input id={`field-${trackNum}`}/>}
-                        >
-                            {this.state.availableFields.map((field, i) => {
-                                return <option key={i.toString()}
-                                               value={field.id}>{field.name}</option>
-                            })}
-                        </Select>
-                    </FormControl>
+                    {/*<FormControl>*/}
+                    {/*<InputLabel htmlFor={`field-${trackNum}`}>Field</InputLabel>*/}
+                    {/*<Select*/}
+                    {/*native*/}
+                    {/*value={this.state.field.id}*/}
+                    {/*onChange={this.handleChange('field')}*/}
+                    {/*input={<Input id={`field-${trackNum}`}/>}*/}
+                    {/*>*/}
+                    {/*{this.state.availableFields.map((field, i) => {*/}
+                    {/*return <option key={i.toString()}*/}
+                    {/*value={field.id}>{field.name}</option>*/}
+                    {/*})}*/}
+                    {/*</Select>*/}
+                    {/*</FormControl>*/}
 
-                    <br/>
 
                     <FormControl>
                         <InputLabel htmlFor={`instrument-${trackNum}`}>Instrument</InputLabel>

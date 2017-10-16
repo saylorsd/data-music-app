@@ -3,8 +3,10 @@ import React, {Component} from 'react';
 import './App.css';
 import {MapContainer} from "./map/map";
 import Menu from "./menu/Menu";
-import {themeColors} from "./utils/settings"
+import Button from 'material-ui/Button'
 
+
+import {themeColors} from "./utils/settings"
 
 
 class App extends Component {
@@ -28,13 +30,41 @@ class MainContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            hood: 'Central Oakland'
+            hood: 'Central Oakland',
         };
         this.updateHood = this.updateHood.bind(this);
     }
 
     updateHood = (hood) => {
         this.setState({hood: hood})
+    };
+
+    handleSubmit = event => {
+        fetch('http://tools.wprdc.org/data-music/neighborhood-music/' +
+            '?neighborhood=Shadyside'+
+            '&tracks=[{"dataset":"fires","instrument":2},{"dataset":"arrests","instrument":57},{"dataset":"three_one_one","instrument":1}]')
+            .then(
+                (response) => {
+                    response.json()
+                        .then(
+                            (data) => {
+                                console.log(data);
+                                let music = "data:audio/wav;base64," + data.music;
+                                console.log(music);
+                                let snd = new Audio(music);
+                                snd.play()
+                                    .then(() => {
+                                        },
+                                        (err) => {
+                                            console.log(err)
+                                        });
+                            },
+                            (err) => console.log(err))
+                },
+                (err) => {
+                    console.log(err)
+                }
+            )
     };
 
     render() {
@@ -44,8 +74,18 @@ class MainContent extends Component {
                               parcelId={this.state.hood}
                               updateHood={this.updateHood}/>
 
-                <div style={{width: '480px', heigh: '100%'}}>
-                    <Menu hood={this.state.hood}/>
+                <div style={{width: '480px', heigh: '100%', display: 'flex', flexDirection: 'column'}}>
+                    <div style={{overflowX: 'auto', flexGrow: '2'}}>
+                        <Menu hood={this.state.hood}/>
+                    </div>
+                    <div style={{paddingBottom: '12px', paddingRight: '12px'}}>
+
+                        <Button raised color='primary'
+                                style={{float: 'right', 'marginLeft': 'auto', 'marginRight': 'auto'}}
+                                onClick={this.handleSubmit}>Make Some Music</Button>
+
+                    </div>
+
                 </div>
             </div>
         );
@@ -78,8 +118,9 @@ class MainHeader extends Component {
 
         return (
             <div style={style} className={this.props.className}>
-                <img style={style.img} src="http://www.wprdc.org/wp-content/themes/wprdc-redesign/assets/images/plain_logo_rbg_cropped.svg"/>
-                <h1 style={style.h1} >Property Dashboard</h1>
+                <img style={style.img}
+                     src="http://www.wprdc.org/wp-content/themes/wprdc-redesign/assets/images/plain_logo_rbg_cropped.svg"/>
+                <h1 style={style.h1}>Neighborhood Sounds</h1>
             </div>
         )
     }
@@ -100,7 +141,7 @@ class MainFooter extends Component {
 
         return (
             <div style={style} className={this.props.className}>
-                <p>Copyright the future WPRDC</p>
+                <p>&copy; 2017 Steve Saylor</p>
             </div>
         )
     }

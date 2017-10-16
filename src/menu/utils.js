@@ -1,12 +1,8 @@
 export const DATASETS = [
     {
-        "id": 'assessment',
-        "name": "Assessment",
-        "cartoAccount": "wprdc-editor",
-        "cartoTable": "wprdc.assessments",
-        "mapId": "4156fe54-fddc-43e6-993a-6ad37626e9e0",
-        "cartoCssId": "#assessments",
-        "parcelIdField": 'parid',
+        "id": 'fires',
+        "name": "Fire Incidents",
+
         "fields": [
             {
                 "id": "fairmarkettotal",
@@ -18,62 +14,11 @@ export const DATASETS = [
                 "valueFunction": "pow",
                 "base": ".0001"
             },
-            {
-                "id": "fairmarketland",
-                "name": "Assessed Land Value (Fair Market)",
-                "info": "",
-                "type": "numeric",
-                "subtype": "money",
-                "range": [null, null],
-                "valueFunction": "pow",
-                "base": "0.0001"
-            },
-            {
-                "id": "fairmarketbuilding",
-                "name": "Assessed Building Value (Fair Market)",
-                "info": "",
-                "type": "numeric",
-                "subtype": "money",
-                "range": [null, null],
-                "valueFunction": "pow",
-                "base": "0.1"
-            },
-            {
-                "id": "yearblt",
-                "name": "Year Built",
-                "info": "some info and stuff2",
-                "type": "numeric",
-                "range": [1755, 2017]
-            },
-            {
-                "id": "yearsold",
-                "name": "Year of Last Sale",
-                "info": "some info and stuff2",
-                "type": "numeric",
-                "range": [1794, 2017]
-            },
-            {
-                "id": "classdesc",
-                "name": "Land Use Class",
-                "info": "some info and stuff2",
-                "type": "category"
-            },
-            {
-                "id": "usedesc",
-                "name": "Land Use Description",
-                "info": "some info and stuff2",
-                "type": "category"
-            }
         ]
     },
     {
-        "id": 'liens',
-        "name": "Liens",
-        "cartoAccount": "wprdc-editor",
-        "cartoTable": "allegheny_county_tax_liens",
-        "mapId": "2ac98314-c5b9-4730-ae79-71c80dbd8790",
-        "cartoCssId": "#liens",
-        "parcelIdField": "#allegheny_county_tax_liens",
+        "id": 'arrests',
+        "name": "Arrests",
         "fields": [
             {
                 "id": "total_amount",
@@ -84,13 +29,6 @@ export const DATASETS = [
                 "valueFunction": "log",
                 "base": "20"
             },
-            {
-                "id": "number",
-                "name": "Number of Liens",
-                "info": "some info and stuff2",
-                "type": "numeric",
-                "range": [null, null]
-            }
         ]
     }
 ];
