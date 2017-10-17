@@ -13,9 +13,12 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import RemoveCircleIcon from 'material-ui-icons/RemoveCircle';
 import LayersIcon from 'material-ui-icons/Layers';
 
+import AddIcon from 'material-ui-icons/Add';
+import MusicIcon from 'material-ui-icons/QueueMusic';
+
 import mapDataSource from "./utils";
 
-const INSTRUMENTS = ['piano', 'guitar', 'bass', 'trumpet'];
+const INSTRUMENTS = ['piano', 'guitar', 'bass', 'celesta', 'organ', 'music box'];
 
 const instrumentNumber = inst => {
     switch (inst) {
@@ -23,13 +26,19 @@ const instrumentNumber = inst => {
             return 1;
             break;
         case 'guitar':
-            return 10;
+            return 25;
             break;
         case 'bass':
-            return 15;
+            return 33;
             break;
-        case 'trumpet':
-            return 25;
+        case 'celesta':
+            return 9;
+            break;
+        case 'organ':
+            return 19;
+            break;
+        case 'music box':
+            return 11;
             break;
         default:
             return 1;
@@ -73,14 +82,13 @@ class TrackMenu extends Component {
         let reqTracks = JSON.stringify(this.state.tracks.map((track) => {
             return {dataset: track.dataset.id, instrument: instrumentNumber(track.instrument)}
         }));
-        console.log(reqTracks);
 
-        let url ='http://tools.wprdc.org/data-music/neighborhood-music/' +
+        let url = 'http://localhost:8000/data-music/neighborhood-music/' +
             '?neighborhood=' + this.props.hood +
-            '&tracks='+ reqTracks;
+            '&tracks=' + reqTracks;
         console.log(url);
 
-        fetch(url, {mode: 'no-cors'})
+        fetch(url)
             .then(
                 (response) => {
                     response.json()
@@ -105,7 +113,7 @@ class TrackMenu extends Component {
 
 
     render() {
-        console.log("rendering");
+        console.log("rendering", this.state.tracks);
         return (
             <div className="main-menu">
                 <h1>{this.props.hood}</h1>
@@ -113,8 +121,8 @@ class TrackMenu extends Component {
 
                 {this.state.tracks.map((track, i) => {
                         return (
-                            <div>
-                                <TrackMenuItem currState={this.state.tracks[i]} trackNumber={i} key={i.toString()}
+                            <div key={i.toString()}>
+                                <TrackMenuItem currState={this.state.tracks[i]} trackNumber={i}
                                                numTracks={this.state.tracks.length}
                                                updateTrack={this.updateTrack} onDelete={this.handleOnDelete(i)}/>
                                 <br/>
@@ -122,14 +130,13 @@ class TrackMenu extends Component {
 
                             </div>
                         );
-
                     }
                 )}
 
-                <Button raised onClick={this.handleTrackAdd}>Add Track </Button>
+                <Button raised onClick={this.handleTrackAdd}><AddIcon/></Button>
                 <Button raised color='primary'
                         style={{float: 'right', 'marginLeft': 'auto', 'marginRight': 'auto'}}
-                        onClick={this.handleSubmit}>Make Some Music</Button>
+                        onClick={this.handleSubmit}><MusicIcon/> Make Some Music</Button>
             </div>
         )
     }
@@ -155,27 +162,19 @@ class TrackMenuItem extends Component {
      * @private
      */
     _getAvailableDatasets() {
-        const styleType = this.state.currentTab;
         let availableDatasets = mapDataSource.getDatasets();
-
-        // Filter out datasets that have no fields that accommodate the style type
-        switch (styleType) {
-            case 'category':
-                availableDatasets = availableDatasets.filter((dataset) => mapDataSource.accommodatesType(dataset.id, 'category'));
-                break;
-            case 'choropleth':
-            case 'range':
-                availableDatasets = availableDatasets.filter((dataset) => mapDataSource.accommodatesType(dataset.id, 'numeric'));
-                break;
-        }
         let defaultDataset = availableDatasets[0];
+
+        console.log("DS", availableDatasets);
+        console.log(defaultDataset);
 
         this.setState(
             {
                 availableDatasets: availableDatasets,
                 dataset: defaultDataset,
-            },
-            this._getAvailableFields(defaultDataset));
+            }, () => {
+                this._getAvailableFields(defaultDataset)
+            });
     }
 
     /**
@@ -184,34 +183,38 @@ class TrackMenuItem extends Component {
      * @private
      */
     _getAvailableFields(dataset) {
-        const styleType = this.state.currentTab;
-        let fields = [],
-            currentField;
+        // const styleType = this.state.currentTab;
+        // let fields = [],
+        //     currentField;
+        //
+        // // Filter fields based on style method
+        // switch (styleType) {
+        //     case 'category':
+        //         fields = dataset.fields.filter((field) => field.type === 'category');
+        //         break;
+        //     case 'choropleth':
+        //     case 'range':
+        //         fields = dataset.fields.filter((field) => field.type === 'numeric');
+        //         break;
+        //     default:
+        //         fields = dataset.fields;
+        // }
+        //
+        // // Currently just using the first field as the default one.
+        // currentField = fields[0];
+        // this.setState(
+        //     {
+        //         availableFields: fields,
+        //         field: currentField,
+        //     },
+        //     () => {
+        //         this.props.updateTrack(this.props.trackNumber, this.state);
+        //     }
+        // )
 
-        // Filter fields based on style method
-        switch (styleType) {
-            case 'category':
-                fields = dataset.fields.filter((field) => field.type === 'category');
-                break;
-            case 'choropleth':
-            case 'range':
-                fields = dataset.fields.filter((field) => field.type === 'numeric');
-                break;
-            default:
-                fields = dataset.fields;
-        }
+        console.log("NEW DS", this.state.dataset)
+        this.props.updateTrack(this.props.trackNumber, this.state);
 
-        // Currently just using the first field as the default one.
-        currentField = fields[0];
-        this.setState(
-            {
-                availableFields: fields,
-                field: currentField,
-            },
-            () => {
-                this.props.updateTrack(this.props.trackNumber, this.state);
-            }
-        )
     }
 
 
@@ -251,7 +254,6 @@ class TrackMenuItem extends Component {
                 }
             );
         }
-
     };
 
     componentWillReceiveProps(nextProps) {
@@ -277,9 +279,10 @@ class TrackMenuItem extends Component {
             }
         };
 
+        console.log(this.state.dataset);
         let trackNum = this.props.trackNumber;
 
-        if (this.state.dataset && this.state.field) {
+        if (this.state.dataset) {
             return (
                 <div className="track-menu-item" style={style.menuItem}>
                     <h3>Track {trackNum + 1}</h3>

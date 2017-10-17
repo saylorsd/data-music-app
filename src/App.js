@@ -5,6 +5,7 @@ import {MapContainer} from "./map/map";
 import Menu from "./menu/Menu";
 import Button from 'material-ui/Button'
 
+import AddIcon from 'material-ui-icons/Add'
 
 import {themeColors} from "./utils/settings"
 
@@ -39,35 +40,16 @@ class MainContent extends Component {
         this.setState({hood: hood})
     };
 
-    handleSubmit = event => {
-        fetch('http://tools.wprdc.org/data-music/neighborhood-music/' +
-            '?neighborhood=Shadyside'+
-            '&tracks=[{"dataset":"fires","instrument":2},{"dataset":"arrests","instrument":57},{"dataset":"three_one_one","instrument":1}]')
-            .then(
-                (response) => {
-                    response.json()
-                        .then(
-                            (data) => {
-                                console.log(data);
-                                let music = "data:audio/wav;base64," + data.music;
-                                console.log(music);
-                                let snd = new Audio(music);
-                                snd.play()
-                                    .then(() => {
-                                        },
-                                        (err) => {
-                                            console.log(err)
-                                        });
-                            },
-                            (err) => console.log(err))
-                },
-                (err) => {
-                    console.log(err)
-                }
-            )
-    };
 
     render() {
+        const style = {
+            menuContainer: {
+                padding: "0 6px",
+                overflowX: 'auto',
+                flexGrow: '2'
+            }
+        };
+
         return (
             <div className={this.props.className}>
                 <MapContainer className="map" id="map"
@@ -75,17 +57,9 @@ class MainContent extends Component {
                               updateHood={this.updateHood}/>
 
                 <div style={{width: '480px', heigh: '100%', display: 'flex', flexDirection: 'column'}}>
-                    <div style={{overflowX: 'auto', flexGrow: '2'}}>
+                    <div style={style.menuContainer}>
                         <Menu hood={this.state.hood}/>
                     </div>
-                    <div style={{paddingBottom: '12px', paddingRight: '12px'}}>
-
-                        <Button raised color='primary'
-                                style={{float: 'right', 'marginLeft': 'auto', 'marginRight': 'auto'}}
-                                onClick={this.handleSubmit}>Make Some Music</Button>
-
-                    </div>
-
                 </div>
             </div>
         );
@@ -114,7 +88,7 @@ class MainHeader extends Component {
                 top: '20px',
                 left: '5px'
             }
-        }
+        };
 
         return (
             <div style={style} className={this.props.className}>

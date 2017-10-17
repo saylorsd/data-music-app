@@ -1,34 +1,21 @@
 export const DATASETS = [
     {
-        "id": 'fires',
-        "name": "Fire Incidents",
-
-        "fields": [
-            {
-                "id": "fairmarkettotal",
-                "name": "Total Assessed Value (Fair Market)",
-                "info": "",
-                "type": "numeric",
-                "subtype": "money",
-                "range": [null, null],
-                "valueFunction": "pow",
-                "base": ".0001"
-            },
+        id: 'fires',
+        name: "Fire Incidents",
+        fields: [''
         ]
     },
     {
-        "id": 'arrests',
-        "name": "Arrests",
-        "fields": [
-            {
-                "id": "total_amount",
-                "name": "Total Amount of Liens ($)",
-                "info": "some info and stuff",
-                "type": "money",
-                "range": [null, null],
-                "valueFunction": "log",
-                "base": "20"
-            },
+        id: 'arrests',
+        name: "Arrests",
+        fields: [ ''
+        ]
+    },
+    {
+        id: "three_one_one",
+        name:"311 Requests",
+        fields: [
+            ''
         ]
     }
 ];

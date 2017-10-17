@@ -44,20 +44,23 @@ export const BASEMAPS = {
  */
 export const MAP_DATASETS = [
     {
-        "id": 'fires',
-        "name": "Fire Incidents",
-        "fields": [
+        id: 'fires',
+        name: "Fire Incidents",
+        fields: [
         ]
     },
     {
-        "id": 'arrests',
-        "name": "Arrests",
-        "fields": [
+        id: 'arrests',
+        name: "Arrests",
+        fields: [
         ]
     },
     {
-        "id": "three_one_one",
-        "name":"311 Requests"
+        id: "three_one_one",
+        name:"311 Requests",
+        fields: [
+
+        ]
     }
 ];
 

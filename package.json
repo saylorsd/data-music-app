@@ -1,6 +1,6 @@
 {
   "name": "music-app",
-  "homepage" : "http://stevesaylor.io/data-music/",
+  "homepage": "http://stevesaylor.io/data-music/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
