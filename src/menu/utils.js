@@ -1,28 +1,28 @@
 export const DATASETS = [
     {
-        id: 'fires',
-        name: "Fire Incidents",
-        fields: [''
-        ]
-    },
-    {
         id: 'arrests',
-        name: "Arrests",
+        name: "Number Arrests per Week",
         fields: [''
         ]
     },
     {
         id: "three_one_one",
-        name: "311 Requests",
+        name: "311 Requests per Day",
         fields: [
             ''
         ]
     },
     {
         id: "bldg_violations",
-        name: "Bldg Code Violations",
+        name: "Bldg Code Violations per Week",
         fields: [
             ''
+        ]
+    },
+    {
+        id: 'fires',
+        name: "Fire Incidents per Week",
+        fields: [''
         ]
     },
 

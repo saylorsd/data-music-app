@@ -4,8 +4,17 @@ import './App.css';
 import {MapContainer} from "./map/map";
 import Menu from "./menu/Menu";
 import Button from 'material-ui/Button'
+import {Sparklines, SparklinesLine, SparklinesBars } from 'react-sparklines';
 
 import AddIcon from 'material-ui-icons/Add'
+import Dialog, {
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from 'material-ui/Dialog';
+
+
 
 import {themeColors} from "./utils/settings"
 
@@ -32,6 +41,9 @@ class MainContent extends Component {
         super(props);
         this.state = {
             hood: 'Central Oakland',
+            open: false,
+            tracks: null,
+            notes: null
         };
         this.updateHood = this.updateHood.bind(this);
     }
@@ -40,6 +52,15 @@ class MainContent extends Component {
         this.setState({hood: hood})
     };
 
+
+    openNoteDisplay = (tracks, notes) => {
+        console.log("DISPLAY", tracks, notes);
+        this.setState({tracks: tracks, notes: notes, open: true})
+    };
+
+    closeNoteDisplay = () => {
+        this.setState({open: false})
+    }
 
     render() {
         const style = {
@@ -58,7 +79,13 @@ class MainContent extends Component {
 
                 <div style={{width: '480px', heigh: '100%', display: 'flex', flexDirection: 'column'}}>
                     <div style={style.menuContainer}>
-                        <Menu hood={this.state.hood}/>
+                        <Menu openNoteDisplay={this.openNoteDisplay} hood={this.state.hood}/>
+                        <NoteDialog open={this.state.open}
+                                    handleRequestClose={this.closeNoteDisplay}
+                                    hood={this.state.hood}
+                                    tracks={this.state.tracks}
+                                    notes={this.state.notes}
+                        />
                     </div>
                 </div>
             </div>
@@ -122,4 +149,68 @@ class MainFooter extends Component {
 }
 
 
+const NoteDialog = props => {
+    let open = props.open,
+        hood = props.hood,
+        tracks = props.tracks,
+        notes = props.notes;
+
+    const style = {
+        'name': {
+            marginBottom: '3px'
+        }
+    };
+
+
+    let noteLen = 20;
+    const maxLen = 300;// max length
+    if (notes) {
+        let longest = notes.map(function (a) {
+            return a.length;
+        }).indexOf(Math.max.apply(Math, notes.map(function (a) {
+            return a.length;
+        })));
+        noteLen = notes[longest].length;
+    }
+
+    // for each noteSet in notes, set width to be
+
+
+    return (
+        <Dialog open={open} onRequestClose={props.handleRequestClose}>
+            <DialogTitle>{`The Sound of ${hood}`}</DialogTitle>
+            <DialogContent>
+                {tracks && tracks.map((track, i) =>
+                    <div key={i.toString()}>
+                        <h5 style={style.name}>{track.dataset.name}</h5>
+                        <Sparklines data={notes[i]}
+                                    // width={Math.floor((notes[i].length / noteLen) * maxLen) * getLen(track.noteValue)}
+                                    preserveAspectRatio={'xMidYMid'}>
+                            <SparklinesLine color={'gray'}/>
+                        </Sparklines>
+                    </div>
+                )}
+            </DialogContent>
+        </Dialog>
+    )
+
+
+};
+
+
+const getLen = (value) => {
+    switch (value) {
+        case 'eighth':
+            return 1;
+        case 'quarter':
+            return 2;
+        case 'half':
+            return 4;
+        default:
+            return 1;
+    }
+}
+
 export default App;
+
+

@@ -1,6 +1,6 @@
 {
   "name": "music-app",
-  "homepage": "http://stevesaylor.io/data-music/",
+  "homepage": "http://tools.wprdc.org/music/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,7 +13,8 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-leaflet": "^1.7.0",
-    "react-scripts": "1.0.14"
+    "react-scripts": "1.0.14",
+    "react-sparklines": "^1.7.0"
   },
   "scripts": {
     "start": "react-scripts start",

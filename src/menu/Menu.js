@@ -21,7 +21,7 @@ import MusicIcon from 'material-ui-icons/QueueMusic';
 
 import mapDataSource from "./utils";
 
-const INSTRUMENTS = ['piano', 'guitar', 'bass', 'celesta', 'organ', 'music box'];
+const INSTRUMENTS = ['piano', 'guitar', 'bass', 'celesta', 'organ'];
 
 const instrumentNumber = inst => {
     switch (inst) {
@@ -86,7 +86,7 @@ class TrackMenu extends Component {
             return {dataset: track.dataset.id, instrument: instrumentNumber(track.instrument), noteValue: track.noteValue}
         }));
 
-        let url = 'http://localhost:8000/data-music/neighborhood-music/' +
+        let url = 'http://tools.wprdc.org/data-music/neighborhood-music/' +
             '?neighborhood=' + this.props.hood +
             '&tracks=' + reqTracks;
         console.log(url);
@@ -97,10 +97,12 @@ class TrackMenu extends Component {
                     response.json()
                         .then(
                             (data) => {
+                                this.props.openNoteDisplay(this.state.tracks, data.notes);
                                 let music = "data:audio/wav;base64," + data.music;
                                 let snd = new Audio(music);
                                 snd.play()
                                     .then(() => {
+
                                         },
                                         (err) => {
                                             console.log(err)
