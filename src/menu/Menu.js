@@ -5,13 +5,16 @@ import List, {ListItem, ListItemText, ListItemAvatar, ListItemSecondaryAction} f
 import Input, {InputLabel} from 'material-ui/Input';
 import Select from 'material-ui/Select';
 import Avatar from 'material-ui/Avatar';
-import {FormControl, FormHelperText} from 'material-ui/Form';
+import {FormLabel, FormControl, FormControlLabel, FormHelperText} from 'material-ui/Form';
 import ToolTip from 'material-ui/Tooltip';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
 import RemoveCircleIcon from 'material-ui-icons/RemoveCircle';
 import LayersIcon from 'material-ui-icons/Layers';
+
+import Radio, {RadioGroup} from 'material-ui/Radio';
+
 
 import AddIcon from 'material-ui-icons/Add';
 import MusicIcon from 'material-ui-icons/QueueMusic';
@@ -80,7 +83,7 @@ class TrackMenu extends Component {
     handleSubmit = event => {
         console.log(this.state.tracks);
         let reqTracks = JSON.stringify(this.state.tracks.map((track) => {
-            return {dataset: track.dataset.id, instrument: instrumentNumber(track.instrument)}
+            return {dataset: track.dataset.id, instrument: instrumentNumber(track.instrument), noteValue: track.noteValue}
         }));
 
         let url = 'http://localhost:8000/data-music/neighborhood-music/' +
@@ -153,7 +156,8 @@ class TrackMenuItem extends Component {
             dataset: null,
             field: null,
             method: '',
-            instrument: INSTRUMENTS[0]
+            instrument: INSTRUMENTS[0],
+            noteValue: 'eighth'
         }
     }
 
@@ -183,35 +187,6 @@ class TrackMenuItem extends Component {
      * @private
      */
     _getAvailableFields(dataset) {
-        // const styleType = this.state.currentTab;
-        // let fields = [],
-        //     currentField;
-        //
-        // // Filter fields based on style method
-        // switch (styleType) {
-        //     case 'category':
-        //         fields = dataset.fields.filter((field) => field.type === 'category');
-        //         break;
-        //     case 'choropleth':
-        //     case 'range':
-        //         fields = dataset.fields.filter((field) => field.type === 'numeric');
-        //         break;
-        //     default:
-        //         fields = dataset.fields;
-        // }
-        //
-        // // Currently just using the first field as the default one.
-        // currentField = fields[0];
-        // this.setState(
-        //     {
-        //         availableFields: fields,
-        //         field: currentField,
-        //     },
-        //     () => {
-        //         this.props.updateTrack(this.props.trackNumber, this.state);
-        //     }
-        // )
-
         console.log("NEW DS", this.state.dataset)
         this.props.updateTrack(this.props.trackNumber, this.state);
 
@@ -276,6 +251,9 @@ class TrackMenuItem extends Component {
                 position: 'absolute',
                 top: '12px',
                 right: '12px',
+            },
+            noteImg: {
+                height: '24px'
             }
         };
 
@@ -306,21 +284,6 @@ class TrackMenuItem extends Component {
                         </Select>
                     </FormControl>
 
-                    {/*<FormControl>*/}
-                    {/*<InputLabel htmlFor={`field-${trackNum}`}>Field</InputLabel>*/}
-                    {/*<Select*/}
-                    {/*native*/}
-                    {/*value={this.state.field.id}*/}
-                    {/*onChange={this.handleChange('field')}*/}
-                    {/*input={<Input id={`field-${trackNum}`}/>}*/}
-                    {/*>*/}
-                    {/*{this.state.availableFields.map((field, i) => {*/}
-                    {/*return <option key={i.toString()}*/}
-                    {/*value={field.id}>{field.name}</option>*/}
-                    {/*})}*/}
-                    {/*</Select>*/}
-                    {/*</FormControl>*/}
-
 
                     <FormControl>
                         <InputLabel htmlFor={`instrument-${trackNum}`}>Instrument</InputLabel>
@@ -336,7 +299,21 @@ class TrackMenuItem extends Component {
                             })}
                         </Select>
                     </FormControl>
+                    <br/><br/>
+                    <FormControl component="fieldset" >
+                        <FormLabel component="legend">Note Value</FormLabel>
+                        <RadioGroup row
+                            aria-label="Note Value"
+                            name="noteValue"
+                            value={this.state.noteValue}
+                            onChange={this.handleChange('noteValue')}
+                        >
+                            <FormControlLabel value="eighth" control={<Radio />} label={<img style={style.noteImg} src={require('../img/eighth_note.png')}/>} />
+                            <FormControlLabel value="quarter" control={<Radio />} label={<img style={style.noteImg} src={require('../img/quarter_note.png')}/>} />
+                            <FormControlLabel value="half" control={<Radio />} label={<img style={style.noteImg} src={require('../img/half_note.png')}/>} />
 
+                        </RadioGroup>
+                    </FormControl>
 
                 </div>
             );
